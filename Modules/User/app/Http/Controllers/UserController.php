@@ -4,53 +4,29 @@ namespace Modules\User\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\User\Services\UserService;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        return view('user::index');
-    }
+    public function __construct(
+        protected UserService $userService
+    ) {}
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('user::create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
     public function show($id)
     {
-        return view('user::show');
+        $user = $this->userService->findUser($id);
+        return response()->json($user);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
+    public function update(Request $request, $id)
     {
-        return view('user::edit');
+        $user = $this->userService->updateUser($id, $request->all());
+        return response()->json($user);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
+    public function destroy($id)
+    {
+        $this->userService->deletUser($id);
+        return response()->json(['message' => 'User deleted successfully']);
+    }
 }
