@@ -4,6 +4,8 @@ namespace Modules\User\Providers;
 
 use Nwidart\Modules\Support\ModuleServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
+use Modules\User\Interfaces\UserRepositoryInterface;
+use Modules\User\Repositories\UserRepository;
 
 class UserServiceProvider extends ModuleServiceProvider
 {
@@ -18,13 +20,6 @@ class UserServiceProvider extends ModuleServiceProvider
     protected string $nameLower = 'user';
 
     /**
-     * Command classes to register.
-     *
-     * @var string[]
-     */
-    // protected array $commands = [];
-
-    /**
      * Provider classes to register.
      *
      * @var string[]
@@ -35,12 +30,13 @@ class UserServiceProvider extends ModuleServiceProvider
     ];
 
     /**
-     * Define module schedules.
-     * 
-     * @param $schedule
+     * Register the service provider.
      */
-    // protected function configureSchedules(Schedule $schedule): void
-    // {
-    //     $schedule->command('inspire')->hourly();
-    // }
+   public function register(): void
+{
+    parent::register();
+
+    $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+    $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+}
 }
