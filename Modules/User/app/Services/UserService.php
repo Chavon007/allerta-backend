@@ -4,7 +4,7 @@ namespace Modules\User\Services;
 
 use Illuminate\Support\Facades\Hash;
 use Modules\User\Interfaces\UserRepositoryInterface;
-use Modules\User\Models\User;
+
 
 
 class UserService {
