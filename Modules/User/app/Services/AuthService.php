@@ -24,6 +24,10 @@ class AuthService{
             'token' => $token,
         ];
     }
+
+    public function me(int $id){
+        return $this->userRepository->find($id);
+    }
      
 
 }

@@ -3,6 +3,7 @@
 namespace Modules\User\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Modules\User\Http\Requests\LoginRequest;
 use Modules\User\Http\Requests\SignupRequest;
 use Modules\User\Services\AuthService;
@@ -27,5 +28,11 @@ public function login(LoginRequest $request)
         'user' => $result['user'],
         'token' => $result['token'],
     ]);
+}
+
+public function me(Request $request){
+    $user = $this->authService->me($request->user()->id);
+
+    return response()->json($user);
 }
 }
