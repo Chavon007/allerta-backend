@@ -6,6 +6,8 @@ use Nwidart\Modules\Support\ModuleServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
 use Modules\User\Interfaces\UserRepositoryInterface;
 use Modules\User\Repositories\UserRepository;
+use Modules\User\Repositories\EmergencyContactRepository;
+use Modules\User\Interfaces\EmergencyContactRepositoryInterface;
 
 class UserServiceProvider extends ModuleServiceProvider
 {
@@ -37,6 +39,7 @@ class UserServiceProvider extends ModuleServiceProvider
     parent::register();
 
     $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+    $this->app->bind(EmergencyContactRepositoryInterface::class, EmergencyContactRepository::class);
     $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
 }
 }
