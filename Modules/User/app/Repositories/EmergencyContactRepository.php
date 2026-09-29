@@ -5,6 +5,8 @@ use Modules\User\Models\User;
 use Modules\User\Interfaces\EmergencyContactRepositoryInterface;
 use Override;
 
+use function Laravel\Prompts\select;
+
 class EmergencyContactRepository implements EmergencyContactRepositoryInterface{
 
     public function __construct(protected User $user)
@@ -21,7 +23,7 @@ class EmergencyContactRepository implements EmergencyContactRepositoryInterface{
 
   
  
-  public function addContact(int $userId, int $contactUserId)
+  public function addContact(int $userId, int $contactUserId, string $identifierType)
   {
      $user = $this->user::findOrFail($userId);
 
@@ -29,7 +31,9 @@ class EmergencyContactRepository implements EmergencyContactRepositoryInterface{
 
    $this->user::findOrFail($contactUserId);
 
-   $user->emergencyContacts()->syncWithoutDetaching([$contactUserId]);
+   $user->emergencyContacts()->syncWithoutDetaching([$contactUserId => [
+        "identifier_type" => $identifierType,
+   ]]);
 
    return $user->emergencyContacts;
   }
@@ -49,4 +53,23 @@ class EmergencyContactRepository implements EmergencyContactRepositoryInterface{
   {
    return $this->user::where("username", $identifier)->orWhere("email", $identifier)->first();
   }
+
+
+	public function fetchContacts(int $userId)
+    {
+        return $this->user::findOrFail($userId)
+        ->emergencyContacts()->select('users.id', 'users.full_name', 'users.username', 'users.email')
+        ->get()->map(function ($contact){
+             $identifierType = $contact->pivot->identifier_type;
+
+            return [
+                'id' => $contact->id,
+                'full_name' => $contact->full_name,
+                'identifier' => $identifierType === 'email'
+                    ? $contact->email
+                    : $contact->username,
+                'identifier_type' => $identifierType,
+            ];
+        });
+    }
 }

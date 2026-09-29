@@ -3,6 +3,7 @@
 namespace Modules\User\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Modules\User\Http\Requests\EmergencyContactRequest;
 use Modules\User\Services\EmergencyContactService;
 
@@ -19,5 +20,10 @@ class EmergencyContactController extends Controller
     );
 
     return response()->json($contacts);
+}
+
+public function fetchContacts(Request $request){
+ $contacts = $this->emergencyContactService->fetchContacts($request->user()->id);
+  return  response()->json($contacts);
 }
 }

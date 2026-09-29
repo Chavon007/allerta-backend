@@ -23,26 +23,41 @@ class EmergencyContactService
         return $this->emergencyContactRepositoryInterface->search($userId, $query);
     }
 
-    public function addContact(int $userId, string $identifier)
-    {
-        $user = $this->userRepository->find($userId);
+   public function addContact(int $userId, string $identifier)
+{
+    $user = $this->userRepository->find($userId);
 
-        if (!$user) {
-            throw ValidationException::withMessages(["user" => "User does not exist"]);
-        }
-
-        $contactUser = $this->emergencyContactRepositoryInterface->findByIdentifier($identifier);
-
-        if (!$contactUser) {
-            throw ValidationException::withMessages(["identifier" => "No user found with that username or email"]);
-        }
-
-        if ($userId === $contactUser->id) {
-            throw ValidationException::withMessages(["identifier" => "You cannot add yourself as an emergency contact"]);
-        }
-
-        return $this->emergencyContactRepositoryInterface->addContact($userId, $contactUser->id);
+    if (!$user) {
+        throw ValidationException::withMessages([
+            "user" => "User does not exist"
+        ]);
     }
+
+    $contactUser = $this->emergencyContactRepositoryInterface
+        ->findByIdentifier($identifier);
+
+    if (!$contactUser) {
+        throw ValidationException::withMessages([
+            "identifier" => "No user found with that username or email"
+        ]);
+    }
+
+    if ($userId === $contactUser->id) {
+        throw ValidationException::withMessages([
+            "identifier" => "You cannot add yourself as an emergency contact"
+        ]);
+    }
+
+    $type = filter_var($identifier, FILTER_VALIDATE_EMAIL)
+        ? "email"
+        : "username";
+
+    return $this->emergencyContactRepositoryInterface->addContact(
+        $userId,
+        $contactUser->id,
+        $type
+    );
+}
 
     public function removeContact(int $userId, int $contactUserId)
     {
@@ -53,5 +68,15 @@ class EmergencyContactService
         }
 
         return $this->emergencyContactRepositoryInterface->removeContactList($userId, $contactUserId);
+    }
+
+    public function fetchContacts(int $userId, ){
+        $user = $this->userRepository->find($userId);
+
+        if(!$user){
+            throw ValidationException::withMessages(["user" => "User does not exist"]);
+        }
+
+        return $this->emergencyContactRepositoryInterface->fetchContacts($userId);
     }
 }

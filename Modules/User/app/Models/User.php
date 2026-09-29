@@ -49,7 +49,7 @@ class User extends Authenticatable{
         ];
     }
     public function emergencyContacts(){
-            return $this->belongsToMany(User::class, "emergency_contacts","user_id", "contact_user_id")->withTimestamps();
+            return $this->belongsToMany(User::class, "emergency_contacts","user_id", "contact_user_id") ->withPivot("identifier_type")->withTimestamps();
     }
 
 }
