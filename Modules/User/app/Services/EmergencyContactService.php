@@ -59,17 +59,19 @@ class EmergencyContactService
     );
 }
 
-    public function removeContact(int $userId, int $contactUserId)
-    {
-        $user = $this->userRepository->find($userId);
+  public function removeContact(int $userId, int $contactUserId)
+{
+    $removed = $this->emergencyContactRepositoryInterface
+        ->removeContactList($userId, $contactUserId);
 
-        if (!$user) {
-            throw ValidationException::withMessages(["user" => "User does not exist"]);
-        }
-
-        return $this->emergencyContactRepositoryInterface->removeContactList($userId, $contactUserId);
+    if (!$removed) {
+        throw ValidationException::withMessages([
+            "contact" => "Contact has already been removed",
+        ]);
     }
 
+    return true;
+}
     public function fetchContacts(int $userId, ){
         $user = $this->userRepository->find($userId);
 

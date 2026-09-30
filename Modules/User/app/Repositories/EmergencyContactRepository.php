@@ -43,9 +43,7 @@ class EmergencyContactRepository implements EmergencyContactRepositoryInterface{
   {
    $user = $this->user::findOrFail($userId);
 
-   $user->emergencyContacts()->detach($contactUserId);
-
-   return $user->emergencyContacts;
+   return  $user->emergencyContacts()->detach($contactUserId) > 0;
   }
 
   

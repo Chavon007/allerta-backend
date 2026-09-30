@@ -28,4 +28,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/emergency-contacts', [EmergencyContactController::class, 'addContact']);
     // search and remove routes here too.
     Route::get("/emergency-contacts", [EmergencyContactController::class, "fetchContacts"]);
+    Route::delete("/emergency-contacts/{contactUserId}", [EmergencyContactController::class, "removeContact"]);
 });

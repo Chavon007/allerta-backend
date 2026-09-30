@@ -26,4 +26,9 @@ public function fetchContacts(Request $request){
  $contacts = $this->emergencyContactService->fetchContacts($request->user()->id);
   return  response()->json($contacts);
 }
+
+public function removeContact(Request $request, int $contactUserId){
+    $this->emergencyContactService->removeContact($request->user()->id, $contactUserId);
+    return response()->json(['message' => 'Contact removed successfully']);
+}
 }
