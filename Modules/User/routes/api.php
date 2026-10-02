@@ -22,6 +22,7 @@ Route::get('/test-speed', function () {
 Route::middleware(['auth:sanctum'])->prefix("auth")->group(function () {
     Route::apiResource('users', UserController::class)->names('user');
     Route::get("/me", [AuthController::class, "me"]);
+    Route::put("/change_password", [AuthController::class, "changePassword"])
 });
 
 Route::middleware('auth:sanctum')->group(function () {

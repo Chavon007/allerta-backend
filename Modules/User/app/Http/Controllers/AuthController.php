@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Modules\User\Http\Requests\LoginRequest;
 use Modules\User\Http\Requests\SignupRequest;
+use Modules\User\Http\Requests\ChangePasswordRequest;
 use Modules\User\Services\AuthService;
 use Modules\User\Services\UserService;
 
@@ -35,4 +36,12 @@ public function me(Request $request){
 
     return response()->json($user);
 }
+
+  public function changePassword(ChangePasswordRequest $request){
+    $user = $request->user();
+
+    $this->userService->updateUser($user->id, $request->validated()["new_password"]);
+
+    return response()->json(["message" => "Password changed successfully"]);
+  }
 }
