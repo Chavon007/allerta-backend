@@ -12,21 +12,17 @@ Route::prefix('auth')->group(function () {
 });
 
 
-Route::get('/test-speed', function () {
-    return response()->json([
-        'message' => 'OK',
-        'time' => microtime(true),
-    ]);
+Route::middleware(['auth:sanctum'])->prefix("auth")->group(function () {
+    Route::get("/me", [AuthController::class, "me"]);
+    Route::put("/profile/update", [AuthController::class, "updateProfile"]);
 });
 
-Route::middleware(['auth:sanctum'])->prefix("auth")->group(function () {
-    Route::apiResource('users', UserController::class)->names('user');
-    Route::get("/me", [AuthController::class, "me"]);
-});
+
 
 Route::middleware('auth:sanctum')->group(function () {
+     Route::get("/emergency-contacts", [EmergencyContactController::class, "fetchContacts"]);
     Route::post('/emergency-contacts', [EmergencyContactController::class, 'addContact']);
     // search and remove routes here too.
-    Route::get("/emergency-contacts", [EmergencyContactController::class, "fetchContacts"]);
+
     Route::delete("/emergency-contacts/{contactUserId}", [EmergencyContactController::class, "removeContact"]);
 });
