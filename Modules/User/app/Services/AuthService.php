@@ -29,5 +29,9 @@ class AuthService{
         return $this->userRepository->find($id);
     }
      
-
+    public function updatePassword(int $id, string $newPassword){
+        return $this->userRepository->update($id, [
+            "password" => Hash::make($newPassword),
+        ]);
+    }
 }
