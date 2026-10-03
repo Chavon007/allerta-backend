@@ -2,8 +2,8 @@
 
 namespace Modules\User\Http\Requests;
 
-use illuminate\Foundation\Http\FormRequest;
-use Override;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class ChangePasswordRequest extends  FormRequest{
     public function authorize():bool{

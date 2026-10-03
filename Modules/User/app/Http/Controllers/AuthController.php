@@ -49,8 +49,9 @@ public function updateProfile(UpdateProfileRequest $request){
   public function changePassword(ChangePasswordRequest $request){
     $user = $request->user();
 
-    $this->userService->updateUser($user->id, $request->validated()["new_password"]);
-
+    $this->authService->updatePassword($user->id, $request->validated()["new_password"]);
+    // logout from all signed in device
+     $user->tokens()->where('id', '!=', $user->currentAccessToken()->id)->delete();
     return response()->json(["message" => "Password changed successfully"]);
   }
 }
