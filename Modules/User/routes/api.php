@@ -15,6 +15,7 @@ Route::prefix('auth')->group(function () {
 Route::middleware(['auth:sanctum'])->prefix("auth")->group(function () {
     Route::get("/me", [AuthController::class, "me"]);
     Route::put("/profile/update", [AuthController::class, "updateProfile"]);
+    Route::put("/change_password", [AuthController::class, "changePassword"])
 });
 
 

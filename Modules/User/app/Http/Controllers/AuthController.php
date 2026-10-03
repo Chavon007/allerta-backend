@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Modules\User\Http\Requests\LoginRequest;
 use Modules\User\Http\Requests\SignupRequest;
 use Modules\User\Http\Requests\UpdateProfileRequest;
+use Modules\User\Http\Requests\ChangePasswordRequest;
 use Modules\User\Services\AuthService;
 use Modules\User\Services\UserService;
 
@@ -45,4 +46,11 @@ public function updateProfile(UpdateProfileRequest $request){
       'data'    => $user,
   ]);
 }
+  public function changePassword(ChangePasswordRequest $request){
+    $user = $request->user();
+
+    $this->userService->updateUser($user->id, $request->validated()["new_password"]);
+
+    return response()->json(["message" => "Password changed successfully"]);
+  }
 }
