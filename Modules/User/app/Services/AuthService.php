@@ -31,7 +31,7 @@ class AuthService{
      
     public function updatePassword(int $id, string $newPassword){
         return $this->userRepository->update($id, [
-            "password" => Hash::make($newPassword),
+            "password" => ($newPassword),
         ]);
     }
 }
