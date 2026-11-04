@@ -3,9 +3,7 @@
 namespace Modules\User\Repositories;
 use Modules\User\Models\User;
 use Modules\User\Interfaces\EmergencyContactRepositoryInterface;
-use Override;
 
-use function Laravel\Prompts\select;
 
 class EmergencyContactRepository implements EmergencyContactRepositoryInterface{
 
