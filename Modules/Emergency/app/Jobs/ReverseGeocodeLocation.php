@@ -33,7 +33,7 @@ class ReverseGeocodeLocation implements ShouldQueue
         $response = Http::withHeaders([
             // Nominatim identifying User-Agent
 
-            "User-Agent" => config("app.name") . "salvationazuh@gmail.com"
+            "User-Agent" => "Allerta/1.0 (" . env("NOMINATIM_CONTACT_EMAIL") . ")",
         ])->timeout(3)->get("https://nominatim.openstreetmap.org/reverse", [
             "format" => "jsonv2",
             "lat" => $emergency->latest_latitude,
