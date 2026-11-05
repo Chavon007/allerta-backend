@@ -1,4 +1,5 @@
 {
     "User": true,
-    "EmergencyContact": true
+    "EmergencyContact": true,
+    "Emergency": true
 }
