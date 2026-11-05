@@ -79,7 +79,7 @@ class EmergencyLocationRepository implements EmergencyLocationRepositoryInterfac
 
   public function getHistory(int $emergencyId): Collection
   {
-    return Emergency::where("emergency_id", $emergencyId)->orderBy("created_at")->get();
+    return EmergencyLocation::where("emergency_id", $emergencyId)->orderBy("created_at")->get();
   }
 
     

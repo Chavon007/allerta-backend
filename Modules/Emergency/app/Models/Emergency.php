@@ -2,13 +2,13 @@
 
 namespace Modules\Emergency\Models;
 
-use EmergencyLocation;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\User\Models\User;
-
+use Modules\Emergency\Models\EmergencyLocation;
 
 
 class Emergency extends Model{

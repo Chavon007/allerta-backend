@@ -11,11 +11,11 @@ class EmergencyLocationRequest extends FormRequest{
         return true;
     }
 
-    public function rules():array{
-        return[
-
-            "latitude" => ["required", "numeric", "between:-90,90"],
-            "longitude" => ["require", "numeric", "between:-180,180"],
-        ];
-    }
+   public function rules(): array
+{
+    return [
+        "latitude" => ["required", "numeric", "between:-90,90"],
+        "longitude" => ["required", "numeric", "between:-180,180"],
+    ];
+}
 }

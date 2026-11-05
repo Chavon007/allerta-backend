@@ -35,7 +35,7 @@ class EmergencyLocationService{
     
     public function addLocationService(int $userId, int $emergencyId, float $latitude, float $longitude):EmergencyLocation{
 
-        $emergency = $this->getHistoryService($userId, $emergencyId);
+        $emergency = $this->getOwnedActiveEmergency($userId, $emergencyId);
 
 
         $lastGeocoded = $emergency->location()->whereNotNull("address")->latest("id")->first();

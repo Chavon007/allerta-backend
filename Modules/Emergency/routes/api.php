@@ -8,5 +8,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post("/emergency/{id}/location", [EmergencyController::class, "addLocation"]);
     Route::post("/emergency/{id}/end", [EmergencyController::class, "endEmergency"]);
     Route::get("/emergency/{id}", [EmergencyController::class, "show"]);
-    Route::get("/emergency/{id}/history", [EmergencyController::class, "history"]);
+    Route::get("/emergency/{id}/history", [EmergencyController::class, "history"]); 
 });
