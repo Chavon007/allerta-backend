@@ -57,7 +57,7 @@ class EmergencyLocationRepository implements EmergencyLocationRepositoryInterfac
          $emergency = Emergency::findOrFail($emergencyId);
 
          $emergency->update([
-            "Status" => "ended",
+            "status" => "ended",
             "ended_at" => now()
          ]);
 

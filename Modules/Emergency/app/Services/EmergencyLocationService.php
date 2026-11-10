@@ -20,11 +20,15 @@ class EmergencyLocationService{
 
     public function startEmergency(int $userId, float $latitude, float $longitude):Emergency{
 
-        if($this->emergencyRepository->findActiveByUser($userId)){
-            throw ValidationException::withMessages([ "emergency" => "You already have an active emergency",]);
-        }
+      $existing = $this->emergencyRepository->findActiveByUser($userId);
+
+        if ($existing) {
+         return $existing; 
+            }
 
         $emergency = $this->emergencyRepository->createEmergency($userId, $latitude, $longitude);
+
+
 
            Bus::chain([
             new ReverseGeocodeLocation($emergency->id),

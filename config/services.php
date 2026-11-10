@@ -18,6 +18,14 @@ return [
         'key' => env('POSTMARK_API_KEY'),
     ],
 
+
+    'geoapify' => [
+    'key' => env('GEOAPIFY_KEY'),
+],
+
+    'nominatim' => [
+    'contact_email' => env('NOMINATIM_CONTACT_EMAIL'),
+],
     'resend' => [
         'key' => env('RESEND_API_KEY'),
     ],
