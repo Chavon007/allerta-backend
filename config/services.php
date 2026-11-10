@@ -19,6 +19,10 @@ return [
     ],
 
 
+    'geoapify' => [
+    'key' => env('GEOAPIFY_KEY'),
+],
+
     'nominatim' => [
     'contact_email' => env('NOMINATIM_CONTACT_EMAIL'),
 ],

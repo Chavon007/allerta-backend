@@ -22,33 +22,37 @@ class ReverseGeocodeLocation implements ShouldQueue
             return;
         }
 
-        try {
-            $response = Http::withHeaders([
-                    "User-Agent" => "Allerta/1.0 (" . config("services.nominatim.contact_email") . ")",
-                ])
-                ->timeout(10)
-                ->get("https://nominatim.openstreetmap.org/reverse", [
-                    "format" => "jsonv2",
-                    "lat" => $emergency->latest_latitude,
-                    "lon" => $emergency->latest_longitude,
-                ]);
+      try {
+    $response = Http::timeout(10)->get("https://api.geoapify.com/v1/geocode/reverse", [
+        "lat" => $emergency->latest_latitude,
+        "lon" => $emergency->latest_longitude,
+        "format" => "json",
+        "apiKey" => config("services.geoapify.key"),
+    ]);
 
-            if ($response->failed()) {
-                Log::warning("Geocode HTTP error", [
-                    "status" => $response->status(),
-                    "body" => $response->body(),
-                ]);
-                return;
-            }
+    if ($response->failed()) {
+        Log::warning("Geoapify error", [
+            "status" => $response->status(),
+            "body" => $response->body(),
+        ]);
+        return;
+    }
 
-            $address = $response->json("display_name");
+    $result = $response->json("results.0");
 
-            if ($address) {
-                $repository->updateAddress($this->emergencyId, $address);
-            }
-        } catch (\Throwable $e) {
-            // never break the chain: NotifyContacts must still run
-            Log::warning("Geocode failed: " . $e->getMessage());
+    if ($result) {
+        // for a shop or business, skip its name and keep only the street part
+        $address = ($result["result_type"] ?? null) === "amenity"
+            ? ($result["address_line2"] ?? $result["formatted"] ?? null)
+            : ($result["formatted"] ?? null);
+
+        if ($address) {
+            $repository->updateAddress($this->emergencyId, $address);
         }
+    }
+} catch (\Throwable $e) {
+    // never break the chain, NotifyContacts must still run
+    Log::warning("Geocode failed: " . $e->getMessage());
+}
     }
 }
