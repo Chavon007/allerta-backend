@@ -117,7 +117,7 @@ class EmergencyLocationRepository implements EmergencyLocationRepositoryInterfac
     
     public function getReceivedByUser(int $contactUserIds): Collection
     {
-        return EmergencyRecipient::where("status", "active")->whereHas("recipents", fn ($q) => $q->where("contact_user_id", $contactUserIds))->with("user:id,full_name")->latest("started_at")->get();
+        return Emergency::where("status", "active")->whereHas("recipents", fn ($q) => $q->where("contact_user_id", $contactUserIds))->with("user:id,full_name")->latest("started_at")->get();
     }
     public function updateRecipientStatus(int $emergencyId, int $contactUserId, string $status): ?EmergencyRecipient
     {
