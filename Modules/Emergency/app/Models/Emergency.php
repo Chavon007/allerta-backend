@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\User\Models\User;
 use Modules\Emergency\Models\EmergencyLocation;
+use Modules\Emergency\Models\EmergencyRecipient;
 
 
 class Emergency extends Model{
@@ -30,7 +31,7 @@ class Emergency extends Model{
       "latest_latitude" => "float",
       "latest_longitude" => "float",
       "started_at" => "datetime",
-      "ended_at" => "datatime",
+      "ended_at" => "datetime",
    ];
  }
 
@@ -41,5 +42,9 @@ class Emergency extends Model{
 
  public function location():HasMany{
    return $this->hasMany(EmergencyLocation::class);
+ }
+
+ public function recipient():HasMany{
+  return $this->hasMany(EmergencyRecipient::class);
  }
 }

@@ -4,6 +4,7 @@ namespace Modules\Emergency\Interfaces;
 use Illuminate\Database\Eloquent\Collection;
 use Modules\Emergency\Models\Emergency;
 use Modules\Emergency\Models\EmergencyLocation;
+use Modules\Emergency\Models\EmergencyRecipient;
 
 interface EmergencyLocationRepositoryInterface{
     public function createEmergency(int $userId, float $latitude, float $longitude):Emergency;
@@ -13,4 +14,8 @@ interface EmergencyLocationRepositoryInterface{
     public function findById(int $emergencyId):?Emergency;
     public function getHistory(int $emergencyId):Collection;
     public function updateAddress(int $emergencyId, string $address):void;
+    public function createRecipients(int $emergencyId, array $contactUserId):void;
+    public function findRecipient(int $emergencyId, int $contactUserId):?EmergencyRecipient;
+    public function getReceivedByUser(int $contactUserIds): Collection;
+    public function updateRecipientStatus(int $emergencyId, int $contactUserId, string $status):? EmergencyRecipient;
 }

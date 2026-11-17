@@ -31,8 +31,9 @@ class NotifyContacts implements ShouldQueue
         $user = $emergency->user;
         $contacts = $user->emergencyContacts;
 
+        $repository->createRecipients($emergency->id, $contacts->pluck("id")->all());
 
-                $location = $emergency->latest_address ?? "Live location available, open the app to track";
+        $location = $emergency->latest_address ?? "Live location available, open the app to track";
         foreach($contacts as $contact){
             // TODO: send the real notification (push or SMS) here.
             // Payload: $user->full_name, $emergency->latest_address,
