@@ -34,12 +34,23 @@ public function endEmergency(Request $request, int $id):JsonResponse{
     return response()->json($emergency);
 }
 
-public function show(int $id):JsonResponse{
-    return response()->json($this->emergencyLocation->findById($id));
+public function show(Request $request, int $id):JsonResponse{
+    return response()->json($this->emergencyLocation->showService($request->user()->id, $id));
 }
 
 
 public function history(Request $request, int $id):JsonResponse{
     return response()->json($this->emergencyLocation->getHistoryService($request->user()->id, $id));
+}
+
+public function getReceivedServiceController(Request $request):JsonResponse{
+    return response()->json($this->emergencyLocation->getReceivedService($request->user()->id));
+}
+
+public function respondServiceController(Request $request, int $id):JsonResponse{
+
+$data = $request->validate(["status" => ["required", "in:on_my_way"],]);
+
+    return response()->json($this->emergencyLocation->respondService($id, $request->user()->id, $data["status"]));
 }
 }

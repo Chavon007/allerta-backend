@@ -12,6 +12,7 @@ use Modules\Emergency\Jobs\NotifyContacts;
 use Modules\Emergency\Jobs\ReverseGeocodeLocation;
 use Modules\Emergency\Models\Emergency;
 use Modules\Emergency\Models\EmergencyLocation;
+use Modules\Emergency\Models\EmergencyRecipient;
 
 class EmergencyLocationService{
     public function __construct(protected EmergencyLocationRepositoryInterface $emergencyRepository)
@@ -86,6 +87,40 @@ class EmergencyLocationService{
         $this->emergencyRepository->updateAddress($emergencyId, $address);
     }
 
+    public function getReceivedService(int $contactUserId):Collection{
+         $emergency = $this->emergencyRepository->getReceivedByUser($contactUserId); 
+
+         return $emergency;
+         }
+
+    public function respondService(int $emergencyId, int $contactUserId, string $status): EmergencyRecipient{
+     $emergency = $this->findById($emergencyId);
+     
+     abort_if($emergency->status !== "active", 422, "This emergency has ended");
+
+     $recipient = $this->emergencyRepository->findRecipient($emergencyId, $contactUserId);
+
+     abort_if(!$recipient, 403, "Not allowed");
+
+     return $this->emergencyRepository->updateRecipientStatus($emergencyId, $contactUserId, $status);
+    }
+
+    // once firebase is ready
+
+    // public function respondService(){
+
+    // }
+    public function showService(int $userId, int $emergencyId): Emergency
+{
+    $emergency = $this->findById($emergencyId);
+
+    $isOwner = $emergency->user_id === $userId;
+    $isRecipient = $this->emergencyRepository->findRecipient($emergencyId, $userId) !== null;
+
+    abort_if(!$isOwner && !$isRecipient, 403, "Not allowed");
+
+    return $emergency;
+}
     public function getOwnedActiveEmergency(int $userId, int $emergencyId):Emergency{
         $emergency = $this->findById($emergencyId);
 

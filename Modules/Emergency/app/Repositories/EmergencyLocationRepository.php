@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Modules\Emergency\Interfaces\EmergencyLocationRepositoryInterface;
 use Modules\Emergency\Models\Emergency;
 use Modules\Emergency\Models\EmergencyLocation;
+use Modules\Emergency\Models\EmergencyRecipient;
 use Illuminate\Support\Facades\DB;
 use Override;
 
@@ -89,5 +90,41 @@ class EmergencyLocationRepository implements EmergencyLocationRepositoryInterfac
         $emergency->update(["latest_address" => $address]);
 
         $emergency->location()->latest()->first()?->update(["address" => $address]);
+    }
+
+
+    
+    public function createRecipients(int $emergencyId, array $contactUserIds):void
+    {
+
+    foreach ($contactUserIds as $contactUserId){
+        EmergencyRecipient::firstOrCreate([
+            "emergency_id" => $emergencyId,
+            "contact_user_id" => $contactUserId,
+        ]);
+    }
+    }
+
+   
+    
+    public function findRecipient(int $emergencyId, int $contactUserId): ?EmergencyRecipient
+    {
+
+    return EmergencyRecipient::where("emergency_id", $emergencyId)->where("contact_user_id", $contactUserId)->first();
+    }
+
+    
+    
+    public function getReceivedByUser(int $contactUserIds): Collection
+    {
+        return EmergencyRecipient::where("status", "active")->whereHas("recipents", fn ($q) => $q->where("contact_user_id", $contactUserIds))->with("user:id,full_name")->latest("started_at")->get();
+    }
+    public function updateRecipientStatus(int $emergencyId, int $contactUserId, string $status): ?EmergencyRecipient
+    {
+       $recipient = $this->findRecipient($emergencyId, $contactUserId);
+
+    $recipient?->update(["status" => $status]);
+
+    return $recipient;
     }
 }
