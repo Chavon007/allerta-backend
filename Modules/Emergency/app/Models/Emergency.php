@@ -2,49 +2,48 @@
 
 namespace Modules\Emergency\Models;
 
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\User\Models\User;
-use Modules\Emergency\Models\EmergencyLocation;
-use Modules\Emergency\Models\EmergencyRecipient;
 
+class Emergency extends Model
+{
+    use HasFactory;
 
-class Emergency extends Model{
- use HasFactory;
+    protected $fillable = [
+        "user_id",
+        "status",
+        "latest_latitude",
+        "latest_longitude",
+        "latest_address",
+        "started_at",
+        "ended_at",
+    ];
 
+    protected function casts(): array
+    {
+        return [
+            "latest_latitude" => "float",
+            "latest_longitude" => "float",
+            "started_at" => "datetime",
+            "ended_at" => "datetime",
+        ];
+    }
 
- protected $fillable =[
-   "user_id",
-    "status",
-    "latest_latitude",
-    "latest_longitude",
-    "latest_address",
-    "started_at",
-    "ended_at"
- ];
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
- protected function cast():array{
-   return [
-      "latest_latitude" => "float",
-      "latest_longitude" => "float",
-      "started_at" => "datetime",
-      "ended_at" => "datetime",
-   ];
- }
+    public function location(): HasMany
+    {
+        return $this->hasMany(EmergencyLocation::class);
+    }
 
-
- public function user():BelongsTo{
-   return $this->belongsTo(User::class);
- }
-
- public function location():HasMany{
-   return $this->hasMany(EmergencyLocation::class);
- }
-
- public function recipient():HasMany{
-  return $this->hasMany(EmergencyRecipient::class);
- }
+    public function recipients(): HasMany
+    {
+        return $this->hasMany(EmergencyRecipient::class);
+    }
 }
