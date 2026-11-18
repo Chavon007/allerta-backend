@@ -121,6 +121,11 @@ class EmergencyLocationService{
 
     return $emergency;
 }
+
+    public function getMineService(int $userId):Collection{
+        $emergency = $this->emergencyRepository->getByUser($userId);
+        return $emergency;
+    }
     public function getOwnedActiveEmergency(int $userId, int $emergencyId):Emergency{
         $emergency = $this->findById($emergencyId);
 

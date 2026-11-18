@@ -53,4 +53,8 @@ $data = $request->validate(["status" => ["required", "in:on_my_way"],]);
 
     return response()->json($this->emergencyLocation->respondService($id, $request->user()->id, $data["status"]));
 }
+
+public function getMineController (Request $request):JsonResponse{
+    return response()->json($this->emergencyLocation->getMineService($request->user()->id));
+}
 }
