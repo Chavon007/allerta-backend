@@ -18,4 +18,5 @@ interface EmergencyLocationRepositoryInterface{
     public function findRecipient(int $emergencyId, int $contactUserId):?EmergencyRecipient;
     public function getReceivedByUser(int $contactUserIds): Collection;
     public function updateRecipientStatus(int $emergencyId, int $contactUserId, string $status):? EmergencyRecipient;
+    public function getByUser(int $userId): Collection;
 }

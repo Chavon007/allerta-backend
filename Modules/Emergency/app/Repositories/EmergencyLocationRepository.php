@@ -128,4 +128,10 @@ class EmergencyLocationRepository implements EmergencyLocationRepositoryInterfac
 
     return $recipient;
     }
+
+   
+    public function getByUser(int $userId): Collection
+    {
+        return Emergency::where("user_id", $userId)->with("recipients.contact:id,full_name")->latest("started_at")->get();
+    }
 }
