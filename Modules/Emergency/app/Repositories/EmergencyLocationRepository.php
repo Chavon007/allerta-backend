@@ -68,7 +68,7 @@ class EmergencyLocationRepository implements EmergencyLocationRepositoryInterfac
    
    public function findById(int $emergencyId): ?Emergency
    {
-    return Emergency::find($emergencyId);
+    return Emergency::with("recipients.contact:id,full_name")->find($emergencyId);
    }
   
   
