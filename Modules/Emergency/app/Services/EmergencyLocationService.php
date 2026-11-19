@@ -119,6 +119,9 @@ class EmergencyLocationService{
 
     abort_if(!$isOwner && !$isRecipient, 403, "Not allowed");
 
+    if(!$isOwner){
+        $emergency->unsetRelations("recipients");
+    }
     return $emergency;
 }
 
