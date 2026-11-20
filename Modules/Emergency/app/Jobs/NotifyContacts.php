@@ -4,8 +4,9 @@ namespace Modules\Emergency\Jobs;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\Log;
 use Modules\Emergency\Interfaces\EmergencyLocationRepositoryInterface;
+use Modules\Notification\Models\DeviceToken;
+use Modules\Notification\Services\PushNotificationService;
 
 class NotifyContacts implements ShouldQueue
 {
@@ -13,33 +14,37 @@ class NotifyContacts implements ShouldQueue
 
     public int $tries = 3;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(public int $emergencyId) {}
 
-    /**
-     * Execute the job.
-     */
-    public function handle(EmergencyLocationRepositoryInterface $repository): void {
+    public function handle(
+        EmergencyLocationRepositoryInterface $repository,
+        PushNotificationService $pushService
+    ): void {
         $emergency = $repository->findById($this->emergencyId);
 
-        if(!$emergency || $emergency->status !== "active"){
+        if (!$emergency || $emergency->status !== "active") {
             return;
         }
 
         $user = $emergency->user;
-        $contacts = $user->emergencyContacts;
+        $contactIds = $user->emergencyContacts->pluck("id")->all();
 
-        $repository->createRecipients($emergency->id, $contacts->pluck("id")->all());
+        $repository->createRecipients($emergency->id, $contactIds);
 
-        $location = $emergency->latest_address ?? "Live location available, open the app to track";
-        foreach($contacts as $contact){
-            // TODO: send the real notification (push or SMS) here.
-            // Payload: $user->full_name, $emergency->latest_address,
-            // $emergency->latest_latitude, $emergency->latest_longitude.
+        $tokens = DeviceToken::whereIn("user_id", $contactIds)
+            ->pluck("token")
+            ->all();
 
-            Log::info("Notify {$contact->full_name} about emergency {$emergency->id}");
-        }
+        $location = $emergency->latest_address
+            ?? "Live location available, open the app to track";
+
+        $pushService->sendEmergencyNotification(
+            $tokens,
+            $user->full_name,
+            $location,
+            $emergency->id,
+            $emergency->latest_latitude,
+            $emergency->latest_longitude
+        );
     }
 }

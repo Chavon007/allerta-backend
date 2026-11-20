@@ -1,5 +1,6 @@
 {
     "User": true,
     "EmergencyContact": true,
-    "Emergency": true
+    "Emergency": true,
+    "Notification": true
 }
