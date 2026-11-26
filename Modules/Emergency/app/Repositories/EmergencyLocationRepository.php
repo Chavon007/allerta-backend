@@ -133,6 +133,6 @@ class EmergencyLocationRepository implements EmergencyLocationRepositoryInterfac
    
     public function getByUser(int $userId): LengthAwarePaginator
     {
-        return Emergency::where("user_id", $userId)->with("recipients.contact:id,full_name")->latest("started_at")->Pagination(15);
+        return Emergency::where("user_id", $userId)->with("recipients.contact:id,full_name")->latest("started_at")->paginate(15);
     }
 }
