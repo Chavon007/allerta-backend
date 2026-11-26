@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Modules\Emergency\Http\Requests\EmergencyLocationRequest;
+use Modules\Emergency\Models\Emergency;
 use Modules\Emergency\Services\EmergencyLocationService;
 
 class EmergencyController extends Controller
@@ -56,5 +57,9 @@ $data = $request->validate(["status" => ["required", "in:on_my_way"],]);
 
 public function getMineController (Request $request):JsonResponse{
     return response()->json($this->emergencyLocation->getMineService($request->user()->id));
+}
+
+public function active(Request $request): JsonResponse{
+    return response()->json($this->emergencyLocation->findActiveByUserService($request->user()->id));
 }
 }

@@ -2,6 +2,7 @@
 namespace Modules\Emergency\Repositories;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\Emergency\Interfaces\EmergencyLocationRepositoryInterface;
 use Modules\Emergency\Models\Emergency;
 use Modules\Emergency\Models\EmergencyLocation;
@@ -115,9 +116,9 @@ class EmergencyLocationRepository implements EmergencyLocationRepositoryInterfac
 
     
     
-    public function getReceivedByUser(int $contactUserIds): Collection
+    public function getReceivedByUser(int $contactUserId): Collection
     {
-        return Emergency::where("status", "active")->whereHas("recipients", fn ($q) => $q->where("contact_user_id", $contactUserIds))->with("user:id,full_name")->latest("started_at")->get();
+        return Emergency::where("status", "active")->whereHas("recipients", fn ($q) => $q->where("contact_user_id", $contactUserId))->with("user:id,full_name")->latest("started_at")->get();
         
     }
     public function updateRecipientStatus(int $emergencyId, int $contactUserId, string $status): ?EmergencyRecipient
@@ -130,8 +131,8 @@ class EmergencyLocationRepository implements EmergencyLocationRepositoryInterfac
     }
 
    
-    public function getByUser(int $userId): Collection
+    public function getByUser(int $userId): LengthAwarePaginator
     {
-        return Emergency::where("user_id", $userId)->with("recipients.contact:id,full_name")->latest("started_at")->get();
+        return Emergency::where("user_id", $userId)->with("recipients.contact:id,full_name")->latest("started_at")->Pagination(15);
     }
 }

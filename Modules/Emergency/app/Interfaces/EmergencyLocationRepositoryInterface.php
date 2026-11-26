@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Modules\Emergency\Models\Emergency;
 use Modules\Emergency\Models\EmergencyLocation;
 use Modules\Emergency\Models\EmergencyRecipient;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 interface EmergencyLocationRepositoryInterface{
     public function createEmergency(int $userId, float $latitude, float $longitude):Emergency;
@@ -16,7 +17,8 @@ interface EmergencyLocationRepositoryInterface{
     public function updateAddress(int $emergencyId, string $address):void;
     public function createRecipients(int $emergencyId, array $contactUserId):void;
     public function findRecipient(int $emergencyId, int $contactUserId):?EmergencyRecipient;
-    public function getReceivedByUser(int $contactUserIds): Collection;
+    public function getReceivedByUser(int $contactUserId): Collection;
     public function updateRecipientStatus(int $emergencyId, int $contactUserId, string $status):? EmergencyRecipient;
-    public function getByUser(int $userId): Collection;
-}
+    public function getByUser(int $userId): LengthAwarePaginator;
+
+    }
