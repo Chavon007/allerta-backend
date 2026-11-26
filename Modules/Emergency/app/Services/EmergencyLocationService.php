@@ -3,6 +3,7 @@
 namespace Modules\Emergency\Services;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Bus;
 use Modules\Emergency\Interfaces\EmergencyLocationRepositoryInterface;
 use Modules\Emergency\Jobs\NotifyContacts;
@@ -96,7 +97,7 @@ class EmergencyLocationService
         return $this->emergencyRepository->getReceivedByUser($contactUserId);
     }
 
-    public function getMineService(int $userId): Collection
+    public function getMineService(int $userId): LengthAwarePaginator
     {
         return $this->emergencyRepository->getByUser($userId);
     }
